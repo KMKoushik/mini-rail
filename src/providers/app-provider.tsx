@@ -11,6 +11,7 @@ import { useQuery } from "@apollo/client";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle, Loader2Icon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Toaster } from "~/components/ui/sonner";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -46,6 +47,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ApolloClientProvider token={token}>
       <AuthProvider onTokenUpdate={handleTokenSubmit}>{children}</AuthProvider>
+      <Toaster />
     </ApolloClientProvider>
   );
 };

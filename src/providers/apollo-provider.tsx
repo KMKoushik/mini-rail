@@ -6,19 +6,46 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  from,
 } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import { toast } from "sonner";
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path, extensions }) => {
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      );
+
+      if (path?.includes("serviceConnect")) {
+        return;
+      }
+
+      toast.error(message);
+    });
+  }
+
+  if (networkError) {
+    console.error(`[Network error]: ${networkError}`);
+    toast.error("Network error. Please check your internet connection.");
+  }
+});
 
 const createApolloClient = (token: string | null) => {
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: createHttpLink({
-      uri: (o) => `/graphql?opName=${o.operationName}`,
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    }),
+    link: from([
+      errorLink,
+      createHttpLink({
+        uri: (o) => `/graphql?opName=${o.operationName}`,
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }),
+    ]),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: "cache-and-network",
