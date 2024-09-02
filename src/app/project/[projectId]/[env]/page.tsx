@@ -102,13 +102,12 @@ export default function ProjectPage() {
             if (!service) return null;
 
             return (
-              <div
-                key={si.node.id}
-                className="border p-4 shadow rounded-xl cursor-pointer"
-                onClick={() => setServiceId(si.node.serviceId)}
-              >
+              <div key={si.node.id} className="border p-4 shadow rounded-xl ">
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-4 w-1/3">
+                  <div
+                    className="flex items-center gap-4 w-1/3 cursor-pointer"
+                    onClick={() => setServiceId(si.node.serviceId)}
+                  >
                     {service.icon ? (
                       <Image
                         src={service.icon}
@@ -119,7 +118,9 @@ export default function ProjectPage() {
                     ) : (
                       <ServerIcon size={24} className="text-gray-700" />
                     )}
-                    <p>{service.name}</p>
+                    <p className="underline decoration-dashed underline-offset-2">
+                      {service.name}
+                    </p>
                   </div>
                   <div className="w-1/3">
                     {si.node.latestDeployment?.status ? (

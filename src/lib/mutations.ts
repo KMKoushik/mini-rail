@@ -36,15 +36,27 @@ export const CREATE_PROJECT = gql(`
 `);
 
 export const SERVICE_CREATE = gql(`
-  mutation serviceCreate($projectId: String!, $environmentId: String, $name: String, $image: String) {
+  mutation serviceCreate($projectId: String!, $environmentId: String, $name: String, $image: String, $repo: String) {
     serviceCreate(input: {
       environmentId: $environmentId,
       projectId: $projectId,
       name: $name,
       source:  {
          image: $image
+         repo: $repo
       }
     }) {
+      id
+    }
+  }
+`);
+
+export const SERVICE_INSTANCE_CONNECT = gql(`
+  mutation serviceInstanceConnect($id: String!, $branch: String!, $repo: String!) {
+    serviceConnect(input: {
+      branch: $branch,
+      repo: $repo
+    }, id: $id) {
       id
     }
   }
