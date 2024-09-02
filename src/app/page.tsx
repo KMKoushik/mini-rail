@@ -1,15 +1,12 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { Loader2Icon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { gql } from "~/__generated__";
 import { CreateProject } from "~/components/projects/create-project";
 import { GET_DASHBOARD } from "~/lib/queries";
 
 export default function Home() {
-  const { loading, error, data } = useQuery(GET_DASHBOARD);
+  const { data } = useQuery(GET_DASHBOARD);
 
   return (
     <main className="">

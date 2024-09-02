@@ -4,8 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "~/providers/theme-provider";
 import { AppProvider } from "~/providers/app-provider";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Mini Rail",
   description: "Mini rail",

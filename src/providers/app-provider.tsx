@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { z } from "zod";
 
 import { ApolloClientProvider } from "./apollo-provider";
 
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { TokenForm } from "~/components/token-form";
 import { GET_ME } from "~/lib/queries";
@@ -13,7 +11,6 @@ import { useQuery } from "@apollo/client";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle, Loader2Icon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { CreateProject } from "~/components/projects/create-project";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
