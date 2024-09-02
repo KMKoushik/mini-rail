@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { VARIABLE_UPSERT, VARIABLE_DELETE } from "~/lib/mutations";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { useQuery } from "@apollo/client";
-import { CheckIcon, Edit2, ServerIcon, Trash2Icon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  Edit2,
+  Loader2Icon,
+  ServerIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import Image from "next/image";
 import { GET_SERVICE_DETAILS } from "~/lib/queries";
 import { StatusBadge } from "./status-badge";
@@ -99,6 +106,11 @@ export const ServiceDetails = ({
                 </div>
               );
             })}
+            <AddVariable
+              projectId={projectId}
+              environmentId={environmentId}
+              serviceId={serviceId}
+            />
           </div>
         </div>
       </div>
@@ -121,6 +133,10 @@ const Variable = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newValue, setNewValue] = useState(value);
+
+  useEffect(() => {
+    setNewValue(value);
+  }, [value]);
 
   const [upsertVariable, { loading: upsertLoading }] = useMutation(
     VARIABLE_UPSERT,
@@ -171,7 +187,7 @@ const Variable = ({
       <div className="w-1/3">{name}</div>
       <div>
         {isEditing ? (
-          <form onSubmit={handleSubmit} className="flex items-center gap-4">
+          <form onSubmit={handleSubmit} className="flex items-center gap-2">
             <Input
               value={newValue}
               onChange={(e) => setNewValue(e.target.value)}
@@ -216,6 +232,75 @@ const Variable = ({
           <Trash2Icon className="h-4 w-4" />
         </Button>
       </div>
+    </div>
+  );
+};
+
+const AddVariable = ({
+  projectId,
+  environmentId,
+  serviceId,
+}: {
+  projectId: string;
+  environmentId: string;
+  serviceId: string;
+}) => {
+  const [name, setName] = useState("");
+  const [value, setValue] = useState("");
+
+  const [upsertVariable, { loading: upsertLoading }] = useMutation(
+    VARIABLE_UPSERT,
+    {
+      refetchQueries: [GET_SERVICE_DETAILS],
+    }
+  );
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await upsertVariable({
+        variables: {
+          name,
+          value,
+          projectId,
+          environmentId,
+          serviceId,
+        },
+      });
+      setName("");
+      setValue("");
+    } catch (error) {
+      console.error("Error adding variable:", error);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <form onSubmit={handleAdd} className="flex items-center gap-4">
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Key"
+          disabled={upsertLoading}
+          className="h-8"
+        />
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Value"
+          disabled={upsertLoading}
+          className="h-8"
+        />
+
+        <Button
+          size="sm"
+          variant="outline"
+          type="submit"
+          disabled={upsertLoading}
+        >
+          {upsertLoading ? <Loader2Icon className="h-4 w-4" /> : "Add"}
+        </Button>
+      </form>
     </div>
   );
 };
