@@ -20,6 +20,7 @@ import { useUrlState } from "~/hooks/useUrlState";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { ServiceDetails } from "~/components/services/service-details";
 import { StatusBadge } from "~/components/services/status-badge";
+import { ServiceAlerts } from "~/components/services/service-alerts";
 
 export default function ProjectPage() {
   const { projectId, env } = useParams<{
@@ -153,6 +154,9 @@ export default function ProjectPage() {
             );
           })}
         </div>
+
+        <p className="text-lg font-semibold mt-10">Alerts</p>
+        <ServiceAlerts environmentId={env} />
       </div>
       <Sheet open={!!serviceId} onOpenChange={handleSheetChange}>
         <SheetContent className=" sm:max-w-3xl">

@@ -83,7 +83,7 @@ export const ApolloClientProvider = ({
   }, [token]);
 
   if (!client) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
