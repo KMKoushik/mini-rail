@@ -22,6 +22,11 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         return;
       }
 
+      if (path?.includes("me") && message === "Not Authorized") {
+        // if user gives team token this will fail, so skipping
+        return;
+      }
+
       toast.error(message);
     });
   }

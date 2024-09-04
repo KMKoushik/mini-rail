@@ -6,12 +6,13 @@ import { ApolloClientProvider } from "./apollo-provider";
 
 import { Button } from "~/components/ui/button";
 import { TokenForm } from "~/components/token-form";
-import { GET_ME } from "~/lib/queries";
+import { GET_DASHBOARD, GET_ME } from "~/lib/queries";
 import { useQuery } from "@apollo/client";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle, Loader2Icon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Toaster } from "~/components/ui/sonner";
+import { useRouter } from "next/navigation";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -60,9 +61,16 @@ const AuthProvider = ({
   children: React.ReactNode;
   onTokenUpdate: (token: string) => void;
 }) => {
-  const { loading, error, data } = useQuery(GET_ME);
+  const { data } = useQuery(GET_ME);
+  const {
+    data: dashboardData,
+    loading: dashboardLoading,
+    error: dashboardError,
+  } = useQuery(GET_DASHBOARD);
 
-  if (loading && !data) {
+  const router = useRouter();
+
+  if (dashboardLoading && !dashboardData) {
     return (
       <div className="h-full container py-10 flex justify-center items-center">
         <Loader2Icon className="h-8 w-8 animate-spin" />
@@ -70,7 +78,7 @@ const AuthProvider = ({
     );
   }
 
-  if (error) {
+  if (dashboardError) {
     return (
       <div className=" max-w-xl mx-auto mt-20 flex flex-col gap-10">
         <Alert variant="destructive">
@@ -90,13 +98,13 @@ const AuthProvider = ({
       <nav className=" flex justify-between mb-28 items-center">
         <div className=" text-xl font-semibold">Mini Railway</div>
         <div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Avatar className="h-12 w-12">
               <AvatarImage
                 src={data?.me.avatar ?? undefined}
                 alt={data?.me.name ?? "name"}
               />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>TM</AvatarFallback>
             </Avatar>
             <div className="">
               <p>{data?.me.name ?? data?.me.email}</p>
@@ -104,7 +112,10 @@ const AuthProvider = ({
                 variant="outline"
                 size="sm"
                 className=" py-2 h-6"
-                onClick={() => onTokenUpdate("")}
+                onClick={() => {
+                  onTokenUpdate("");
+                  router.replace("/");
+                }}
               >
                 Logout
               </Button>
