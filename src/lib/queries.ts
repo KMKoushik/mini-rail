@@ -121,3 +121,17 @@ export const GET_SERVICE_DETAILS = gql(`
     }
   }
 `);
+
+export const GET_DEPLOYMENT_LOGS = gql(`
+  query deploymentLogs($deploymentId: String!, $filter: String, $startDate: DateTime, $endDate: DateTime, $limit: Int) {
+    deploymentLogs(deploymentId: $deploymentId, filter: $filter, startDate: $startDate, endDate: $endDate, limit: $limit) {
+      severity
+      message
+      timestamp
+      attributes {
+        key
+        value
+      }
+    }
+  }
+`);

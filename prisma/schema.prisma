@@ -18,11 +18,13 @@ model LogAlert {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   checkEvery    Int      @default(300)
+  logLimit      Int      @default(10)
+  severity      String[]
   title         String?
   description   String?
-  userId        String
   filter        String?
   serviceIds    String[]
   environmentId String
   token         String
+  email         String
 }
