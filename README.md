@@ -12,6 +12,7 @@ a mini UI client for railway.app
 - [x] create docker/github services and delete services
 - [x] start/stop service instances (deployment)
 - [x] edit env variables (copy between 2 tabs easily)
+- [ ] Delete service instance instead of service
 - [ ] create alert for logs: [#1](https://github.com/KMKoushik/mini-rail/pull/1)
 
 ## how to start
